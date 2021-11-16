@@ -1,0 +1,160 @@
+html {
+    --main-color: #1B1B1B;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+table.main {
+    width: 700px;
+    margin: 0 auto;
+}
+
+table.form {
+    width: 500px;
+    margin: 0 auto;
+}
+
+table.canvas {
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.077);
+    border-collapse: collapse;
+}
+
+td.pixel-cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.077);
+}
+
+td.pixel-cell:hover {
+    background-color: rgba(0, 0, 0, 0.166);
+}
+
+.pixel {
+    margin: 0px;
+    padding: 0px;
+    width: 30px;
+    height: 30px;
+}
+
+/* Header */
+
+.app-header {
+    padding: 10px;
+    background-color: var(--main-color);
+    color: white;
+}
+
+.account-img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.menu-item {
+    color:white;
+    text-decoration:none;
+    font-size: 22px;
+    padding: 10px;
+}
+
+/* Picker */
+
+.sketch-picker {
+    box-shadow: none;
+}
+
+/* Loader */
+
+.lds-grid {
+	display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 80px;
+    margin-top: 300px;
+}
+
+.lds-grid div {
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background: #fff;
+	animation: lds-grid 1.2s linear infinite;
+}
+
+.lds-grid div:nth-child(1) {
+	top: 8px;
+	left: 8px;
+	animation-delay: 0s;
+}
+
+.lds-grid div:nth-child(2) {
+	top: 8px;
+	left: 32px;
+	animation-delay: -0.4s;
+}
+
+.lds-grid div:nth-child(3) {
+	top: 8px;
+	left: 56px;
+	animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(4) {
+	top: 32px;
+	left: 8px;
+	animation-delay: -0.4s;
+}
+
+.lds-grid div:nth-child(5) {
+	top: 32px;
+	left: 32px;
+	animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(6) {
+	top: 32px;
+	left: 56px;
+	animation-delay: -1.2s;
+}
+
+.lds-grid div:nth-child(7) {
+	top: 56px;
+	left: 8px;
+	animation-delay: -0.8s;
+}
+
+.lds-grid div:nth-child(8) {
+	top: 56px;
+	left: 32px;
+	animation-delay: -1.2s;
+}
+
+.lds-grid div:nth-child(9) {
+	top: 56px;
+	left: 56px;
+	animation-delay: -1.6s;
+}
+
+@keyframes lds-grid {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.1;
+	}
+}
+
+.loadingView {
+    background-color: var(--main-color);
+    text-align: center;
+    margin: 0 auto;
+    height: 60vw;
+}

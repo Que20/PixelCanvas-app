@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Standard Meta -->
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<!-- Site Properties -->
+		<title>PixelCanvas</title>
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<style type="text/css">
+			@font-face {
+				font-family: 'Nokia Cellphone FC';
+				src: URL('./../fonts/nokiafc22.ttf') format('truetype');
+			}
+			.animated-pixel {
+				position: absolute;
+				opacity: 0.7;
+			}
+            #pixel-container {
+                width: 100%;
+                height: 100%;
+				position: absolute;
+                overflow: hidden;
+            }
+			.ui.secondary.pointing.menu {
+				border: none;
+			}
+			.ui.vertical.segment {
+				border: none;
+			}
+
+			.hidden.menu
+			{
+				display: none;
+			}
+
+			.masthead.segment
+			{
+				min-height: 550px;
+				padding: 1em 0em;
+			}
+
+			.masthead .logo.item img
+			{
+				margin-right: 1em;
+			}
+
+			.masthead .ui.menu .ui.button
+			{
+				margin-left: 0.5em;
+			}
+
+			.masthead h1.ui.header
+			{
+				font-family: 'Nokia Cellphone FC';
+				margin-top: 3em;
+				margin-bottom: 0em;
+				font-size: 4em;
+				font-weight: normal;
+			}
+
+			.masthead h2
+			{
+				font-size: 1.7em;
+				font-weight: normal;
+			}
+
+			.pixelated {
+				font-family: 'Nokia Cellphone FC';
+			}
+
+			.ui.vertical.stripe
+			{
+				padding: 8em 0em;
+			}
+
+			.ui.vertical.stripe h3
+			{
+				font-size: 2em;
+			}
+
+			.ui.vertical.stripe .button + h3,.ui.vertical.stripe p + h3
+			{
+				margin-top: 3em;
+			}
+
+			.ui.vertical.stripe .floated.image
+			{
+				clear: both;
+			}
+
+			.ui.vertical.stripe p
+			{
+				font-size: 1.33em;
+			}
+
+			.ui.vertical.stripe .horizontal.divider
+			{
+				margin: 3em 0em;
+			}
+
+			.quote.stripe.segment
+			{
+				padding: 0em;
+			}
+
+			.quote.stripe.segment .grid .column
+			{
+				padding-top: 5em;
+				padding-bottom: 5em;
+			}
+
+			.footer.segment
+			{
+				padding: 5em 0em;
+			}
+
+			.secondary.pointing.menu .toc.item
+			{
+				display: none;
+			}
+
+            .ui.steps .step:after {
+                border-width: 0px 3px 3px 0px;
+                border-color: black;
+                margin-left: 10px;
+                margin-right:-2px;
+            }
+
+            .ui.steps .step {
+                border-right: 3px solid black;
+            }
+
+            .ui.steps {
+                border-width: 3px 3px 3px 3px;
+                border-color: black;
+                border-radius: 0px;
+            }
+
+            .description {
+                color: white;
+            }
+
+            .separator {
+                aspect-ratio: 960/100;
+                width: 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+            }
+
+            .waves {
+                background-image: url('./waves.svg');
+            }
+
+            .peaks2 {
+                background-image: url('./peaks.svg');
+                transform: rotate(180deg);
+            }
+
+            .peaks {
+                background-image: url('./peaks.svg');
+            }
+
+            .blocks {
+                background-image: url('./steps.svg');
+            }
+
+            .dark {
+                background-color:#1B1B1B;
+            }
+
+            /* SLIDER */
+
+
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(calc(-250px * 7));
+                }
+            }
+            .slider {
+                background: #1B1B1B;
+                height: 250px;
+                margin: 0 auto;
+                overflow: hidden;
+                position: relative;
+                width: 960px;
+            }
+            .slider::before, .slider::after {
+                background: linear-gradient(to right, #1B1B1B 0%, rgba(0, 0, 0, 0) 100%);
+                content: "";
+                height: 250px;
+                position: absolute;
+                width: 200px;
+                z-index: 2;
+            }
+
+            .slider::after {
+                right: 0;
+                top: 0;
+                transform: rotateZ(180deg);
+            }
+            .slider::before {
+                left: 0;
+                top: 0;
+            }
+            .slider .slide-track {
+                animation: scroll 30s linear infinite;
+                display: flex;
+                width: calc(250px * 10);
+            }
+            .slider .slide {
+                height: 250px;
+                width: 250px;
+                margin-left: 60px;
+            }
+            .slider-img {
+                height: 250px;
+                width: 250px;
+            }
+
+
+            @media only screen and (max-width: 700px) {
+                .masthead h1.ui.header {
+                    font-size: 2em;
+                }
+                .masthead h2 {
+                    font-size: 1.5em;
+                }
+                .slider {
+                    background: #1B1B1B;
+                    width: 360px;
+                    height: 100px;
+                }
+                .slider .slide {
+                    height: 100px;
+                    width: 100px;
+                    margin-left: 20px;
+                }
+                .slider::before, .slider::after {
+                    height: 100px;
+                    width: 50px;
+                }
+                .slider-img {
+                    height: 100px;
+                    width: 100px;
+                }
+            }
+		</style>
+		<script>
+
+		$(document).ready(function() {
+			const colors = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
+
+			const pixelCount = 100;
+			const pixels = [];
+
+			for (let i = 0; i < pixelCount; i++) {
+				let pixel = document.createElement("div");
+				pixel.classList.add("animated-pixel");
+				pixel.style.background = colors[Math.floor(Math.random() * colors.length)];
+				pixel.style.left = `${Math.floor(Math.random() * 100)}vw`;
+				pixel.style.top = `${Math.floor(Math.random() * 100)}vh`;
+				pixel.style.transform = `scale(${Math.random()})`;
+				pixel.style.width = `${Math.random()}em`;
+				pixel.style.height = pixel.style.width;
+
+				pixels.push(pixel);
+				$('#pixel-container').append(pixel);
+			}
+
+			// Keyframes
+			pixels.forEach((el, i, ra) => {
+				let to = {
+					x: Math.random() * (i % 2 === 0 ? -11 : 11),
+					y: Math.random() * 12
+				};
+
+	  			let anim = el.animate(
+	    			[
+	      				{ transform: "translate(0, 0)" },
+	      				{ transform: `translate(${to.x}rem, ${to.y}rem)` }
+	    			],
+	    			{
+	      				duration: (Math.random() + 1) * 2000, // random duration
+	      				direction: "alternate",
+	      				fill: "both",
+	      				iterations: Infinity,
+	      				easing: "ease-in-out"
+	    			}
+	  			);
+			});
+		});
+		
+
+		</script>
+	</head>
+	<body>
+		<div class="pusher">
+			<div class="ui vertical masthead center aligned segment">
+				<div class="ui container">
+					<div class="ui large secondary pointing menu">
+						<div class="right item">
+							<a class="ui button">
+								Enter App
+								<i class="right arrow icon"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+                <div id="pixel-container"></div>
+				<div class="ui text container">
+					<h1 class="ui header">PixelCanvas Project</h1>
+					<h2>The first collaborative NFT</h2>
+					<div class="ui huge green button"> 
+						<span class="pixelated">START</span>
+					</div>
+				</div>
+			</div>
+            
+            <div class="separator peaks2"></div>
+            <div class="dark">
+			<div class="ui vertical stripe segment inverted">
+				<div class="ui middle aligned stackable grid container">
+					<div class="row">
+						<div class="eight wide column">
+                            <h3 class="ui header inverted">Create a NFT, pixel by pixel - with others !</h3>
+                            <p>
+                                PixelCanvas Project is an ERC721 implementation. </br>
+                                A canvas contains 64 pixels. You can mint and color pixels you own to create a unique piece of digital art. </br>
+                                A pixel cost 0.001 ETH (about 5.00 USD) and coloring a pixel is free (plus gas).
+                            </p>
+							<h3 class="ui header inverted">So how it works ?</h3>
+							<p>
+								PixelCanvas Project is an ERC721 implementation. </br>
+								Each <span class="pixelated">PXC</span> Token represent a pixel. Every pixel has a color and is contained in a canvas. </br>
+								Once a canvas is complet and evey pixel is owned, every owner have 72 hour to fix their pixel's colors. </br>
+								After that, the canvas is sold as a unique NFT on OpenSea. </br>
+                                Every pixel owner will receive a commission of 10% (devided by the number of pixels) on every resell of the canvas.
+							</p>
+							<h3 class="ui header inverted">Where can I grab some pixels ?! </h3>
+							<p>
+								Just click on the "Start" button, connect your wallet, and you're all set!</br>
+                                Once aquired, it's yours. You can edit it through the PixelCanvas Project's web app.</br>
+							</p>
+						</div>
+						<div class="six wide right floated column">
+							<img src="art/frame.png" class="ui medium image">
+						</div>
+					</div>
+					<!-- <div class="row">
+						<div class="center aligned column">
+							<a class="ui huge button"><span class="pixelated">Check Them Out</span></a>
+						</div>
+					</div> -->
+                    <div class="row">
+                        <div class="center aligned column">
+                            <br>
+                            <h3 class="ui header inverted">Need some inspiration ?</h3>
+                            </br></br>
+                            <div class="slider">
+                                <div class="slide-track">
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/1.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/2.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/3.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/4.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/5.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/6.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/7.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/8.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/9.png" alt="" />
+                                    </div>
+                                    <div class="slide">
+                                        <img class="slider-img" src="art/10.png" alt="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+			</div>
+            </div>
+
+            <div class="separator peaks"></div>
+
+			<div class="ui vertical stripe quote segment">
+				<div class="ui equal width stackable internally grid">
+                    <div class="row">
+                        <div class="center aligned column">
+                        </br>
+                        <h3 class="ui header">The Project timeline </h3>
+                        </br>
+                        <div class="ui tablet stackable steps inverted">
+                            <div class="step">
+                                <i class="chess board icon"></i>
+                                <div class="content">
+                                    <div class="title"><span class="pixelated">Get your pixels</span></div>
+                                    <div class="description">
+                                        <p>
+                                            All pixels are available <br> within the PixelCanvas App
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <i class="pencil alternate icon"></i>
+                                <div class="content">
+                                    <div class="title"><span class="pixelated">Draw the canvas</span></div>
+                                    <div class="description"><p>Select each pixels color</p></div>
+                                </div>
+                            </div>
+                            <div class="disabled step">
+                                <i class="lock icon"></i>
+                                <div class="content">
+                                    <div class="title"><span class="pixelated">Canvas is locked<br>and goes for sale</span></div>
+                                    <div class="description">Once locked,<br>every color changewon't be<br>registered to the canvas</div>
+                                </div>
+                            </div>
+                            <div class="disabled step">
+                                <i class="money bill alternate icon"></i>
+                                <div class="content">
+                                    <div class="title"><span class="pixelated">Profit!</span></div>
+                                    <div class="description">Every sell and resell <br> will get all the pixel owner <br> a comission of 10%</div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+					<div class="center aligned row">
+						<div class="column">
+							<h3>"What a Project!"</h3>
+							<p>
+								That is what they all say about us
+							</p>
+						</div>
+						<div class="column">
+							<h3>"How come I didn't have</br>this idea before..?"</h3>
+							<p>
+								<!-- <img src="assets/images/avatar/nan.jpg" class="ui avatar image"> -->
+								Literally every crypto bro
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui vertical stripe segment">
+				<div class="ui text container">
+                    <h3 class="ui header">So why is it called a "Project" ?</h3>
+					<p>
+						Well, it's more like an experiment. <br> I like anything that's collaborative and I was so curious of what a community would make if you just give them a blank canvas and the opportunity to monetize it. The financial aspect of it is quite secondary.
+					</p>
+					<h3 class="ui header">Did I mentioned it's open source ?</h3>
+					<p>
+						It is. <br> You can find all the sources for the smart contract and the web app used in this project on github.</br>Don't hesitate to fork or contribute :)
+					</p>
+					<a class="ui large button">View source</a>
+					<!-- <h4 class="ui horizontal header divider"><a href="#">Case Studies</a></h4> -->
+					<!--
+					<h3 class="ui header">Did We Tell You About Our Bananas?</h3>
+					<p>
+						Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but its really true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.
+					</p>
+					<a class="ui large button">I'm Still Quite Interested</a>
+					-->
+				</div>
+			</div>
+
+            <div class="separator peaks2"></div>
+
+			<div class="ui inverted vertical footer segment">
+				<div class="ui container">
+					<div class="ui stackable inverted divided equal height stackable grid">
+						<div class="three wide column">
+							<h4 class="ui inverted header">About</h4>
+							<div class="ui inverted link list">
+								<a href="#" class="item">About us</a>
+								<a href="#" class="item">Sitemap</a>
+								<a href="#" class="item">Contact Us</a>
+								<!-- <a href="#" class="item">Religious Ceremonies</a> -->
+								<!-- <a href="#" class="item">Gazebo Plans</a> -->
+							</div>
+						</div>
+						<div class="three wide column">
+							<h4 class="ui inverted header">Social stuff</h4>
+							<div class="ui inverted link list">
+								<!-- <a href="#" class="item">Banana Pre-Order</a> -->
+								<!-- <a href="#" class="item">DNA FAQ</a> -->
+								<a href="#" class="item">Twitter</a>
+								<span class="item">We just have Twitter</span>
+							</div>
+						</div>
+						<div class="seven wide column">
+							<h4 class="ui inverted header">More about NFT</h4>
+							<p>
+								You can find a lot of ressources online, just get on YouTube or your favourite search engine I guess.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
