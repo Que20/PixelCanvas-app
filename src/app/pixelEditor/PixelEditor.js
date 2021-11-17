@@ -129,6 +129,8 @@ class PixelEditor extends Component {
                 )
             case PixelSelectedType.OWNED:
                 return (<p> You dont own this pixel </p>)
+            default:
+                return (<p> No selection </p>)
         }
         
     }
