@@ -63,7 +63,7 @@ class ETH {
         console.log("COLOR "+color)
         console.log("INDEX "+index)
 		var mintTxHash = null
-		this.contract.methods.mint(color, index).send({from: this.account, value: (price*10**18)}, (error, result) => {
+		this.contract.methods.mint(Number(color), index+"").send({from: this.account, value: (price*10**18)}, (error, result) => {
 			mintTxHash = result
             // TODO : handle error
             if (error === null) {
@@ -168,6 +168,51 @@ class ETH {
         this.contract.getPastEvents('Indexed', {fromBlock: "earliest", toBlock: "latest"}, (err, events) => {
             callback(events)
         });
+    }
+
+    logEvents = (name) => {
+        if (this.contract == null) { return }
+        this.contract.getPastEvents(name, {fromBlock: "earliest", toBlock: "latest"}, (err, events) => {
+            console.log(events)
+        });
+    }
+
+    getSoldoutEvent = (callback) => {
+        if (this.contract == null) { return }
+        this.contract.getPastEvents('Soldout', {fromBlock: "earliest", toBlock: "latest"}, (err, events) => {
+            const unix_timestamp = events[0]?.returnValues?.timestamp ?? 0
+            if (unix_timestamp !== 0) {
+                const date = new Date(unix_timestamp * 1000);
+                this.log("Canvas soldout on "+date)
+                const now = new Date();
+                const delay = 72
+                const limit = new Date((unix_timestamp*1000)+(delay*60*60*1000))
+                if (now > limit) {
+                    callback(true, true)
+                } else {
+                    const diff = this.dateDiff(now, limit)
+                    const strLeft = diff.day+" days, "+diff.hour+" hours, "+diff.min+" min, "+diff.sec+" seconds"
+                    this.log("Canvas soldout on "+date+". "+strLeft+" left to modify.")
+                    callback(true, false)
+                }
+            } else {
+                callback(false, false)
+            }
+        });
+    }
+
+    dateDiff = (date1, date2) => {
+        var diff = {}
+        var tmp = date2 - date1;
+        tmp = Math.floor(tmp/1000)
+        diff.sec = tmp % 60
+        tmp = Math.floor((tmp-diff.sec)/60)
+        diff.min = tmp % 60
+        tmp = Math.floor((tmp-diff.min)/60)
+        diff.hour = tmp % 24
+        tmp = Math.floor((tmp-diff.hour)/24)
+        diff.day = tmp
+        return diff
     }
 }
 export default ETH

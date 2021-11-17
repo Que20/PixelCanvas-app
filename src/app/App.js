@@ -8,7 +8,6 @@ import Header from './header/Header'
 
 import ETH from './eth'
 import Web3 from 'web3';
-import { throwStatement } from '@babel/types';
 
 const PixelSelectedType = {
     MINT: "mint",
@@ -26,16 +25,13 @@ class App extends Component {
             allTokens: [],
             balance: [],
             message: "",
-            // coloriseId: "",
-            // coloriseColor: "",
-            // indexToMint: "",
-            // colorToMint: "",
             editorViewType: PixelSelectedType.NONE,
             loadEthState: {id: -1, label: "Loading app..."},
             selectedIndex: "",
             selectedId: "",
             selectedColor: "",
-            menuItem: "canvas"
+            menuItem: "canvas",
+            locked: false
         }
 	}
 
@@ -58,11 +54,20 @@ class App extends Component {
         myEth.allTokens((tokens) => {
             this.setState({ allTokens: tokens })
         })
+        myEth.getSoldoutEvent(this.soldoutHandler)
 	}
+
+    soldoutHandler = (soldout, locked) => {
+        if (soldout) {
+            this.setState({ locked: locked })
+            setTimeout(function() {
+                this.state.eth.getSoldoutEvent(this.soldoutHandler)
+            }.bind(this), 100)
+        }
+    }
 
     prompt = (message) => {
         this.setState({ message: message})
-        console.log("Prompt ETH: "+message)
     }
 
     ethLoadState = (loadState) => {
@@ -76,8 +81,8 @@ class App extends Component {
     }
 
     render() {
-        if(this.state.loadEthState.id == 1) {
-            if (this.state.menuItem == "canvas") {
+        if(this.state.loadEthState.id === 1) {
+            if (this.state.menuItem === "canvas") {
                 return (
                     <div className="App">
                         <Header account={""+this.state.account} delegate={this}/>  
@@ -133,6 +138,7 @@ class App extends Component {
     }
 
     handlePixelSelect = (event) => {
+        if (this.state.locked) { return }
         this.setState({message: ""})
         const index = event.target.dataset.space
         const ownedByMe = this.state.balance.find((element) => {
@@ -163,7 +169,7 @@ class App extends Component {
     }
 
     mint = (index, color) => {
-        if (index == "" || color == "") { return }
+        if (index === "" || color === "") { return }
         this.state.eth.mint(0.01, color, index, (values) => {
             this.state.eth.getTokens((balance) => {
                 this.setState({ balance: balance })
@@ -175,7 +181,7 @@ class App extends Component {
     }
 
     colorise = (id, color) => {
-        if (id == "" || color == "") { return }
+        if (id === "" || color === "") { return }
         this.state.eth.colorise(id, color, (done) => {
             this.state.eth.getTokens((balance) => {
                 this.setState({ balance: balance })
@@ -188,7 +194,7 @@ class App extends Component {
 
     tokenColorForIndex = (i) => {
         let token = this.state.allTokens.find((element) => {
-            return element.index == i
+            return element.index === i
         })
         return token?.color ?? 0
     }
