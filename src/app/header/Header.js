@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { generateFromString } from 'generate-avatar'
 
 class Header extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     render() {
         return (
@@ -23,7 +20,8 @@ class Header extends Component {
                     </tbody>
                     </table>
                     <div>
-                    <a className="menu-item" href='#' onClick={this.showCanvas}>Canvas</a> <a className="menu-item" href='#' onClick={this.showAccount}>Account</a>
+                    <button className="menu-item" onClick={this.showCanvas}>Canvas</button>
+                    <button className="menu-item"  onClick={this.showAccount}>Account</button>
                     </div>
                 </header>
             </div>
