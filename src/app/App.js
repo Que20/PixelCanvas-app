@@ -194,7 +194,7 @@ class App extends Component {
 
     tokenColorForIndex = (i) => {
         let token = this.state.allTokens.find((element) => {
-            return element.index === i
+            return element.index === i+""
         })
         return token?.color ?? 0
     }
