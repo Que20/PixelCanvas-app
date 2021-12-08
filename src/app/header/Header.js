@@ -22,6 +22,7 @@ class Header extends Component {
                     <div>
                     <button className="menu-item" onClick={this.showCanvas}>Canvas</button>
                     <button className="menu-item"  onClick={this.showAccount}>Account</button>
+                    <a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php"><button className="menu-item">Get free MATIC</button></a>
                     </div>
                 </header>
             </div>
