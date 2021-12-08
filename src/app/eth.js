@@ -7,6 +7,14 @@ class ETH {
         this.account = null
         this.contract = null
         this.delegate = null
+
+        this.contractInfo = {
+            block: 22279304,
+            address: '0x4863C9CcF5882f97630b530C173B78e43bC7b05C',
+            abi: this.getAbi(),
+            chainId: 137,
+            chainRcpURL: 'https://polygon-rpc.com'
+        }
     }
 	
 	init = (web3, delegate) => {
@@ -35,14 +43,41 @@ class ETH {
         }
     }
 
+    setCorrectNetwork = async () => {
+        try {
+            await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{
+                    chainId: '0x'+this.contractInfo.chainId.toString(16)
+                }],
+            });
+        } catch (error) {
+            if (error.code === 4902) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: '0x'+this.contractInfo.chainId.toString(16),
+                            rpcUrl: this.contractInfo.rpcUrl,
+                        }, ],
+                    });
+                } catch (addError) {
+                    console.error(addError);
+                }
+            }
+            console.error(error);
+        }
+    }
+
 	loadBlockchainData = async () => {
 		const accounts = await this.web3.eth.getAccounts()
 		this.account = accounts[0]
-		const networkId = await this.web3.eth.net.getId()
-		const networkData = PixelCanvasContract.networks[networkId]
-		if(networkData) {
-			const abi = PixelCanvasContract.abi
-			const address = networkData.address
+		//const networkId = await this.web3.eth.net.getId()
+		//const networkData = PixelCanvasContract.networks[networkId]
+        await this.setCorrectNetwork()
+		if(true) {
+			const abi = this.contractInfo.abi
+			const address = this.contractInfo.address//networkData.address
 			this.contract = new this.web3.eth.Contract(abi, address)
             if(this.contract != null && this.account != null) {
                 this.notifyState(1)
