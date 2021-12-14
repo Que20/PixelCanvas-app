@@ -4,19 +4,19 @@ import './index.css';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 import {
-    BrowserRouter,
+    HashRouter,
     Routes,
     Route
 } from "react-router-dom";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
+    <React.StrictMode>
+    <HashRouter>
         <Routes>
             <Route index element={<App />} />
         </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
+    </HashRouter>
+    </React.StrictMode>,
   document.getElementById('root')
 );
 
