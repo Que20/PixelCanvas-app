@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 import Canvas from './canvas/Canvas'
@@ -26,7 +29,7 @@ class App extends Component {
             balance: [],
             message: "",
             editorViewType: PixelSelectedType.NONE,
-            loadEthState: {id: -1, label: "Loading app..."},
+            loadingInfo: {id: -1, label: "Loading app..."},
             selectedIndex: "",
             selectedId: "",
             selectedColor: "",
@@ -66,45 +69,46 @@ class App extends Component {
         }
     }
 
-    prompt = (message) => {
-        this.setState({ message: message})
-    }
-
-    ethLoadState = (loadState) => {
-        let states = {
-            1: "All good",
-            2: "Unable to retreive network data",
-            3: "Unable to get the smart contract",
-            4: "Unable to acces the metamask account"
-        }
-        this.setState({ loadEthState: {id: loadState, label: states[loadState]} })
-    }
-
     render() {
-        if(this.state.loadEthState.id === 1) {
+        if(this.state.loadingInfo === null) {
             if (this.state.menuItem === "canvas") {
                 return (
                     <div className="App">
                         <Header account={""+this.state.account} delegate={this}/>  
-                        <p> {"\n"+this.state.message} </p>
-                        <table className="main">
+                        <ToastContainer position="top-right" autoClose={5000} hideProgressBar newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+                        
+                        {/* <p> {"\n"+this.state.message} </p> */}
+                        
+                        <div className="app-container">
+                        {/* <table className="main">
                             <tbody>
                                 <tr>
                                     <td>
-                                        <Canvas tokenColorForIndex={this.tokenColorForIndex} handlePixelSelect={this.handlePixelSelect}/>
+                                        <Canvas tokenColorForIndex={this.tokenColorForIndex} selected={this.state.selectedIndex} handlePixelSelect={this.handlePixelSelect}/>
                                     </td>
                                     <td>
                                         <PixelEditor pixelSelectedType={this.state.editorViewType} selectedId={this.state.selectedId} selectedIndex={this.state.selectedIndex} selectedColor={this.state.selectedColor} delegate={this}/>
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table> */}
+                            <div className="main-view">
+                                <div className="canvas-container"><div className="canvas-view">
+                                    <Canvas allTokens={this.state.allTokens} selected={this.state.selectedIndex} handlePixelSelect={this.handlePixelSelect}/>
+                                </div></div>
+                                <div className="pixel-container"><div className="pixel-view">
+                                    <PixelEditor pixelSelectedType={this.state.editorViewType} selectedId={this.state.selectedId} selectedIndex={this.state.selectedIndex} selectedColor={this.state.selectedColor} colorSelection={this.colorSelection} delegate={this}/>
+                                </div></div>
+                            </div>
+                        </div>
+                        <h6> Made with ❤️ <a href='https://maarek.io'>maarek.io</a></h6>
                     </div>
                 )
             } else {
                 return (
                     <div className="App">
                         <Header account={""+this.state.account} delegate={this}/>
+                        <div className="app-container">
                         <h3>You own {this.state.balance.length} pixel</h3>
                         <table className="form">
                             <tbody>
@@ -123,13 +127,15 @@ class App extends Component {
                                 )
                             })}
                             </tbody>
-                        </table>   
+                        </table>
+                        </div>
                         <p> {"\n"+this.state.message} </p>
+                        <h6> Made with ❤️ <a href='https://maarek.io'>maarek.io</a></h6>
                     </div>
                 )
             }
         } else {
-            return (<Loading message={this.state.loadEthState.label} />)
+            return (<Loading message={this.state.loadingInfo.label} />)
         }
     }
 
@@ -138,6 +144,10 @@ class App extends Component {
     }
 
     handlePixelSelect = (event) => {
+        // let tkns = this.state.allTokens.filter((v, i, a) => { 
+        //     return v.token_id != -1
+        // })
+        // this.setState({ allTokens: tkns })
         if (this.state.locked) { return }
         this.setState({message: ""})
         const index = event.target.dataset.space
@@ -149,7 +159,7 @@ class App extends Component {
                 selectedColor: ownedByMe.color,
                 editorViewType: PixelSelectedType.COLOR,
                 selectedId: ownedByMe.token_id,
-                selectedIndex: ""
+                selectedIndex: index
             })
         } else {
             const ownedByAnyone = this.state.allTokens.find((element) => {
@@ -166,6 +176,21 @@ class App extends Component {
                 this.setState({editorViewType: PixelSelectedType.OWNED})
             }
         }
+    }
+
+    colorSelection = (index, color) => {
+        // var current = this.state.allTokens
+        // for(var i = 0; i < current.length; i++) {
+        //     if(current[i].token_id == -1) {
+        //         current[i].color = null
+        //     }
+        // }
+        let current = this.state.allTokens.filter((v, i, a) => { 
+            return v.token_id != -1
+        })
+        console.log(current)
+        current.push({token_id: -1, color: color, index: index})
+        //this.setState({ allTokens: current })
     }
 
     mint = (index, color) => {
@@ -192,12 +217,53 @@ class App extends Component {
         })
     }
 
-    tokenColorForIndex = (i) => {
-        let token = this.state.allTokens.find((element) => {
-            return element.index === i+""
-        })
-        return token?.color ?? 0
+    // tokenColorForIndex = (i) => {
+    //     let token = this.state.allTokens.find((element) => {
+    //         return element.index === i+""
+    //     })
+    //     return token?.color ?? 0
+    // }
+
+    prompt = (type, message) => {
+        const conf = {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        }
+        if (type == "info") {
+            toast.info(message, conf)
+        }
+        if (type == "success") {
+            toast.success(message, conf)
+        }
+        if (type == "error") {
+            toast.error(message, conf)
+        }
     }
+
+    unableToConnectNetwork = () => {
+        this.prompt('error', 'Unable to connect to the correct network.')
+    }
+    unableToAddNetwork = () => {
+        this.prompt('error', 'Unable to add the correct network to your metamask wallet')
+    }
+    loadSuccess = () => {
+        this.setState({loadingInfo: null})
+    }
+    metamaskError = () => {
+        this.prompt('error', 'Unable to connect to your wallet\nIs your metamask correctly set up?')
+    }
+    noMetamask = () => {
+        this.setState({loadingInfo: {id: -1, label: "No metamask"}})
+    }
+    contractError = () => {
+        this.prompt('error', 'Unable to retreive the smart contract')
+    }
+
 }
 
 export default App;
