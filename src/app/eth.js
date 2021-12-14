@@ -22,22 +22,9 @@ class ETH {
 
     log = (text) => {
         if (this.delegate != null) {
-            this.delegate.prompt(text)
+            this.delegate.prompt('info', text)
         } else {
             console.log(text)
-        }
-    }
-
-    notifyState = (state) => {
-        // States :
-        // 1 => All good
-        // 2 => Unable to retreive network data
-        // 3 => Unable to get the smart contract
-        // 4 => Unable to acces the metamask account
-        if (this.delegate != null) {
-            this.delegate.ethLoadState(state)
-        } else {
-            console.log(state)
         }
     }
 
@@ -56,40 +43,41 @@ class ETH {
                         method: 'wallet_addEthereumChain',
                         params: [{
                             chainId: '0x'+this.contractInfo.chainId.toString(16),
-                            rpcUrl: this.contractInfo.rpcUrl,
-                        }, ],
-                    });
+                            rpcUrl: this.contractInfo.rpcUrl
+                        }],
+                    })
                 } catch (addError) {
-                    console.error(addError);
+                    this.delegate.unableToAddNetwork()
+                    console.error(addError)
                 }
             }
-            console.error(error);
+            this.delegate.unableToConnectNetwork()
         }
     }
 
 	loadBlockchainData = async () => {
+        if (this.web3 == null) {
+            this.delegate.noMetamask()
+            return
+        }
 		const accounts = await this.web3.eth.getAccounts()
 		this.account = accounts[0]
 		//const networkId = await this.web3.eth.net.getId()
 		//const networkData = PixelCanvasContract.networks[networkId]
         await this.setCorrectNetwork()
-		if(true) {
-			const abi = this.contractInfo.abi
-			const address = this.contractInfo.address//networkData.address
-			this.contract = new this.web3.eth.Contract(abi, address)
-            if(this.contract != null && this.account != null) {
-                this.notifyState(1)
-            } else {
-                if(this.account === null) {
-                    this.notifyState(4)
-                }
-                if(this.contract === null) {
-                    this.notifyState(3)
-                }
+        const abi = this.contractInfo.abi
+        const address = this.contractInfo.address//networkData.address
+        this.contract = new this.web3.eth.Contract(abi, address)
+        if(this.contract != null && this.account != null) {
+            this.delegate.loadSuccess()
+        } else {
+            if(this.account === null) {
+                this.delegate.metamaskError()
             }
-		} else {
-			this.notifyState(2)
-		}
+            if(this.contract === null) {
+                this.delegate.contractError()
+            }
+        }
 	}
 
 	mint = (price, color, index, callback) => {
@@ -192,6 +180,9 @@ class ETH {
     getColoredEvents = (callback) => {
         if (this.contract == null) { return }
         this.contract.getPastEvents('Colored', {fromBlock: this.contractInfo.block, toBlock: "latest"}, (err, events) => {
+            if (events === null || err !== null) {
+                return
+            }
             callback(events)
         });
     }
@@ -199,6 +190,9 @@ class ETH {
     getIndexEvents = (callback) => {
         if (this.contract == null) { return }
         this.contract.getPastEvents('Indexed', {fromBlock: this.contractInfo.block, toBlock: "latest"}, (err, events) => {
+            if (events === null || err !== null) {
+                return
+            }
             callback(events)
         });
     }
@@ -213,6 +207,11 @@ class ETH {
     getSoldoutEvent = (callback) => {
         if (this.contract == null) { return }
         this.contract.getPastEvents('Soldout', {fromBlock: this.contractInfo.block, toBlock: "latest"}, (err, events) => {
+            console.log(err)
+            if (events === null || err !== null) {
+                callback(false, false)
+                return
+            }
             const unix_timestamp = events[0]?.returnValues?.timestamp ?? 0
             if (unix_timestamp !== 0) {
                 const date = new Date(unix_timestamp * 1000);
