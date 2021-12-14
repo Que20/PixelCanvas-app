@@ -2,73 +2,48 @@ import React, { Component } from 'react';
 
 class Canvas extends Component {
 
+    componentDidMount() {
+        console.log(this.props.selected)
+    }
+
     render() {
+        const rows = [0, 8, 16, 24, 32, 40, 48, 56]
         return (
             <div>
-            <h1>The canvas</h1>
-            <table className="canvas">
-                <tbody>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index} className="pixel-cell">
-                        <div className="pixel" data-space={index} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+8} className="pixel-cell">
-                        <div className="pixel" data-space={index+8} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+8)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+16} className="pixel-cell">
-                        <div className="pixel" data-space={index+16} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+16)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+24} className="pixel-cell">
-                        <div className="pixel" data-space={index+24} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+24)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+32} className="pixel-cell">
-                        <div className="pixel" data-space={index+32} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+32)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+40} className="pixel-cell">
-                        <div className="pixel" data-space={index+40} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+40)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+48} className="pixel-cell">
-                        <div className="pixel" data-space={index+48} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+48)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                <tr>
-                {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
-                    <td key={index+56} className="pixel-cell">
-                        <div className="pixel" data-space={index+56} style={{'backgroundColor': '#'+Number(this.props.tokenColorForIndex(index+56)).toString(16)}} onClick={this.props.handlePixelSelect}></div>
-                    </td>
-                ))}
-                </tr>
-                </tbody>
-            </table>
+                {/* <p>{this.props.allTokens.length+''}</p> */}
+                <table className="canvas">
+                    <tbody>
+                    {Array.from({length: 8}, (_, i) => i+1).map((i, row) => (
+                        <tr key={rows[row]}>
+                        {Array.from({length: 8}, (_, i) => i+1).map((i, index) => (
+                            <td key={index+rows[row]} className="pixel-cell">
+                                <div    className="pixel"
+                                        data-space={index+rows[row]}
+                                        style={{
+                                            'backgroundColor': '#'+Number(this.props.allTokens.find((e) => { return e.index === (index+rows[row])+"" })?.color ?? 0).toString(16),
+                                            // 'border' : (this.props.selected == index ? '1px solid #a0c4ff' : 'none')
+                                        }}
+                                        onClick={this.props.handlePixelSelect}>
+                                            {this.props.selected == index+rows[row] ? (
+                                                <div className='blink-selection' style={{'backgroundColor': 'rgba(0, 0, 0, 0.2)', 'width':'100%', 'height':'100%'}}> </div>
+                                            ) : null}
+                                </div>
+                            </td>
+                        ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
         )
     }
+
+    // tokenColorForIndex = (i) => {
+    //     let token = this.props.allTokens.find((element) => {
+    //         return element.index === i+""
+    //     })
+    //     return token?.color ?? 0
+    // }
 }
 
 export default Canvas;
