@@ -2,6 +2,7 @@
   "name": "pixel-canvas-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
@@ -16,7 +17,8 @@
     "web3": "latest",
     "react-router-dom": "latest",
     "generate-avatar": "latest",
-    "react-color": "latest"
+    "react-color": "latest",
+    "react-toastify": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
