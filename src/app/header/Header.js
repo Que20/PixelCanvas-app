@@ -4,28 +4,18 @@ import { generateFromString } from 'generate-avatar'
 class Header extends Component {
 
     render() {
+        {/* <p> Connected with{" "+this.props.account} </p> */}
         return (
-            <div>
-                <header className="app-header">
-                    <table className="main">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <p> Connected with{" "+this.props.account} </p>
-                            </td>
-                            <td>
-                                <img className="account-img" src={`data:image/svg+xml;utf8,${generateFromString(this.props.account)}`} alt=""/>
-                            </td>
-                        </tr>
-                    </tbody>
-                    </table>
-                    <div>
-                    <button className="menu-item" onClick={this.showCanvas}>Canvas</button>
-                    <button className="menu-item"  onClick={this.showAccount}>Account</button>
-                    <a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php"><button className="menu-item">Get free MATIC</button></a>
-                    </div>
-                </header>
-            </div>
+            <header className="app-header">
+                <div className="header-title">
+                    <h1 onClick={this.showCanvas}> Pixel Canvas </h1>
+                </div>
+                <div className="header-menu">
+                    {/* <button className="menu-item" onClick={this.showCanvas}>Canvas</button> */}
+                    <a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php"><button className="menu-item faucet">Get free MATIC</button></a>
+                    <img className="account-img" src={`data:image/svg+xml;utf8,${generateFromString(this.props.account)}`} alt="" onClick={this.showAccount} />
+                </div>
+            </header>
         )
     }
 
